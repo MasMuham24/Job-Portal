@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -145,9 +146,7 @@
         </div>
 
         @if (session('success'))
-            <div class="alert-success">
-                {{ session('success') }}
-            </div>
+            <div class="alert-success" style="display:none" id="login-success-alert">{{ session('success') }}</div>
         @endif
 
         @if ($errors->any())
@@ -203,5 +202,22 @@
             Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var el = document.getElementById('login-success-alert');
+            if (el && el.textContent.trim()) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: el.textContent.trim(),
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+        });
+    </script>
 </body>
 </html>

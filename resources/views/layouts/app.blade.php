@@ -38,6 +38,9 @@
         }
     </script>
 
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -76,10 +79,19 @@
                             Dashboard
                         </a>
 
+                        @if(Auth::check() && Auth::user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Admin Panel
+                            </a>
+                        @endif
+
                         @if(Auth::check() && Auth::user()->role === 'employer')
                             @if(Auth::user()->company)
                                 <a href="{{ route('company.show') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('company.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                     Perusahaan Saya
+                                </a>
+                                <a href="{{ route('job-postings.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('job-postings.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                    Kelola Lowongan
                                 </a>
                             @else
                                 <a href="{{ route('company.create') }}" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs flex items-center gap-1.5">
@@ -106,8 +118,14 @@
                             <div class="flex flex-col text-left">
                                 <span class="text-sm font-semibold text-slate-900 leading-tight">{{ Auth::user()->name }}</span>
                                 <span class="text-[11px] font-medium text-slate-500 capitalize flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full {{ Auth::user()->role === 'employer' ? 'bg-emerald-500' : 'bg-blue-500' }}"></span>
-                                    {{ Auth::user()->role === 'employer' ? 'Perusahaan / Employer' : 'Pencari Kerja' }}
+                                    <span class="w-1.5 h-1.5 rounded-full {{ Auth::user()->role === 'admin' ? 'bg-red-500' : (Auth::user()->role === 'employer' ? 'bg-emerald-500' : 'bg-blue-500') }}"></span>
+                                    @if(Auth::user()->role === 'admin')
+                                        Administrator
+                                    @elseif(Auth::user()->role === 'employer')
+                                        Perusahaan / Employer
+                                    @else
+                                        Pencari Kerja
+                                    @endif
                                 </span>
                             </div>
                         </div>
@@ -144,10 +162,18 @@
             <a href="{{ route('dashboard') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                 Dashboard
             </a>
+            @if(Auth::check() && Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Admin Panel
+                </a>
+            @endif
             @if(Auth::check() && Auth::user()->role === 'employer')
                 @if(Auth::user()->company)
                     <a href="{{ route('company.show') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('company.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                         Perusahaan Saya
+                    </a>
+                    <a href="{{ route('job-postings.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('job-postings.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                        Kelola Lowongan
                     </a>
                 @else
                     <a href="{{ route('company.create') }}" class="block px-3 py-2 text-base font-semibold text-blue-600 hover:bg-blue-50 rounded-lg">
@@ -211,6 +237,57 @@
                     menu.classList.toggle('hidden');
                 });
             }
+
+            // SweetAlert2: Session Flash Messages
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: {!! json_encode(session('success')) !!},
+                    timer: 3000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            @endif
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: {!! json_encode(session('error')) !!},
+                    timer: 4000,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            @endif
+
+            // SweetAlert2: Confirm Dialogs
+            document.querySelectorAll('[data-confirm]').forEach(function(el) {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var form = this.closest('form');
+                    var title = this.getAttribute('data-confirm-title') || 'Konfirmasi';
+                    var text = this.getAttribute('data-confirm');
+                    var icon = this.getAttribute('data-confirm-icon') || 'warning';
+                    Swal.fire({
+                        title: title,
+                        text: text,
+                        icon: icon,
+                        showCancelButton: true,
+                        confirmButtonColor: '#2563eb',
+                        cancelButtonColor: '#94a3b8',
+                        confirmButtonText: 'Ya, Lanjutkan',
+                        cancelButtonText: 'Batal'
+                    }).then(function(result) {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
         });
     </script>
     @stack('scripts')

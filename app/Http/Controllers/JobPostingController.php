@@ -80,4 +80,15 @@ class JobPostingController extends Controller
 
         return redirect()->route('job-postings.show', $jobPosting)->with('success', 'Lowongan berhasil diperbarui.');
     }
+
+    public function destroy(JobPosting $jobPosting)
+    {
+        $company = Auth::user()->company;
+        abort_unless($company, 404);
+        abort_unless($jobPosting->company_id === $company->id, 403);
+
+        $jobPosting->delete();
+
+        return redirect()->route('job-postings.index')->with('success', 'Lowongan berhasil dihapus.');
+    }
 }
