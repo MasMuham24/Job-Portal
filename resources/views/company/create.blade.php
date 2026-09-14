@@ -24,10 +24,10 @@
     {{-- Page Title Section --}}
     <div class="mb-8">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Create your company profile
+            Buat Profil Perusahaan
         </h1>
         <p class="mt-2 text-sm sm:text-base text-slate-600">
-            Tell candidates about your company.
+            Ceritakan tentang perusahaan Anda kepada para pencari kerja.
         </p>
     </div>
 
@@ -229,7 +229,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Create Company</span>
+                    <span>Simpan Profil Perusahaan</span>
                 </button>
             </div>
         </form>

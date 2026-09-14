@@ -19,6 +19,10 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
+        if (Auth::user()->company) {
+            return redirect()->route('company.show')->with('error', 'Anda sudah memiliki profil perusahaan.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -32,7 +36,7 @@ class CompanyController extends Controller
 
         Company::create($validated);
 
-        return redirect()->route('company.show');
+        return redirect()->route('company.show')->with('success', 'Profil perusahaan berhasil dibuat.');
     }
 
     public function show()
@@ -40,6 +44,8 @@ class CompanyController extends Controller
         $company = Auth::user()->company;
 
         abort_unless($company, 404);
+
+        $company->load(['jobs' => fn ($q) => $q->latest()]);
 
         return view('company.show', compact('company'));
     }

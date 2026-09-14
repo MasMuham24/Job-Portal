@@ -83,6 +83,9 @@
                             <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                 Admin Panel
                             </a>
+                            <a href="{{ route('admin.job-postings.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.job-postings.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Moderasi Lowongan
+                            </a>
                             <a href="{{ route('admin.users.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                 Kelola Pengguna
                             </a>
@@ -179,6 +182,9 @@
             @if(Auth::check() && Auth::user()->role === 'admin')
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                     Admin Panel
+                </a>
+                <a href="{{ route('admin.job-postings.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.job-postings.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Moderasi Lowongan
                 </a>
                 <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                     Kelola Pengguna

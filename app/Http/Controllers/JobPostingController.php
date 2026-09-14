@@ -76,6 +76,11 @@ class JobPostingController extends Controller
             'salary_max' => ['nullable', 'integer', 'gte:salary_min'],
             'deadline' => ['nullable', 'date', 'after_or_equal:today'],
         ]);
+
+        if ($jobPosting->status === 'active') {
+            $validated['status'] = 'pending';
+        }
+
         $jobPosting->update($validated);
 
         return redirect()->route('job-postings.show', $jobPosting)->with('success', 'Lowongan berhasil diperbarui.');

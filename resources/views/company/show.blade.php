@@ -56,8 +56,8 @@
                     @endphp
 
                     <div class="relative group shrink-0">
-                        @if(!empty($company->logo))
-                            <img src="{{ $company->logo }}" 
+                        @if(!empty($company->logo_url))
+                            <img src="{{ $company->logo_url }}" 
                                  alt="{{ $company->name }} Logo" 
                                  class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover bg-white p-1 border-4 border-white shadow-md shadow-slate-200 ring-1 ring-slate-200/60"
                                  onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-extrabold text-2xl sm:text-3xl border-4 border-white shadow-md\'>{{ $initials }}</div>';">
@@ -162,7 +162,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <span>Lowongan Kerja</span>
-                <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-200/80 text-slate-700">0</span>
+                <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-200/80 text-slate-700">{{ $company->jobs->count() }}</span>
             </button>
         </div>
     </div>
@@ -231,32 +231,72 @@
                             </div>
                             <div>
                                 <h2 class="text-lg font-bold text-slate-900">Lowongan Terbuka</h2>
-                                <p class="text-xs text-slate-500">Lowongan yang sedang aktif dari {{ $company->name }}</p>
+                                <p class="text-xs text-slate-500">Lowongan yang sedang dibuka oleh {{ $company->name }}</p>
                             </div>
                         </div>
                         <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">
-                            0 Lowongan
+                            {{ $company->jobs->count() }} Lowongan
                         </span>
                     </div>
 
-                    {{-- Empty State for Jobs --}}
-                    <div class="rounded-xl bg-slate-50/80 border border-dashed border-slate-200 p-8 text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 mx-auto flex items-center justify-center mb-3">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
+                    @if($company->jobs->isEmpty())
+                        {{-- Empty State for Jobs --}}
+                        <div class="rounded-xl bg-slate-50/80 border border-dashed border-slate-200 p-8 text-center">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 mx-auto flex items-center justify-center mb-3">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                            </div>
+                            <h3 class="text-sm font-bold text-slate-900 mb-1">Belum Ada Lowongan yang Dipublikasikan</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto mb-4">
+                                Publikasikan lowongan pekerjaan pertama Anda untuk mulai menerima lamaran dari talenta terbaik.
+                            </p>
+                            <a href="{{ route('job-postings.create') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-lg border border-emerald-200 transition-colors">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                <span>Buka Lowongan Baru</span>
+                            </a>
                         </div>
-                        <h3 class="text-sm font-bold text-slate-900 mb-1">Belum Ada Lowongan yang Dipublikasikan</h3>
-                        <p class="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto mb-4">
-                            Publikasikan lowongan pekerjaan pertama Anda untuk mulai menerima lamaran dari talenta terbaik.
-                        </p>
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-lg border border-emerald-200 transition-colors">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            <span>Kelola Lowongan di Dashboard</span>
-                        </a>
-                    </div>
+                    @else
+                        <div class="divide-y divide-slate-100">
+                            @foreach($company->jobs->take(5) as $job)
+                                <div class="py-3.5 flex items-center justify-between gap-4">
+                                    <div class="min-w-0">
+                                        <a href="{{ route('job-postings.show', $job) }}" class="text-sm font-bold text-slate-900 hover:text-blue-600 transition-colors truncate block">
+                                            {{ $job->title }}
+                                        </a>
+                                        <div class="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                                            <span>{{ $job->location }}</span>
+                                            <span>•</span>
+                                            <span>{{ $job->employment_type }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2.5 shrink-0">
+                                        @if($job->status === 'active')
+                                            <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full bg-green-50 text-green-700">Aktif</span>
+                                        @elseif($job->status === 'pending')
+                                            <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full bg-amber-50 text-amber-700">Menunggu</span>
+                                        @elseif($job->status === 'closed')
+                                            <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600">Ditutup</span>
+                                        @else
+                                            <span class="inline-block px-2 py-0.5 text-[11px] font-semibold rounded-full bg-red-50 text-red-700">{{ ucfirst($job->status) }}</span>
+                                        @endif
+                                        <a href="{{ route('job-postings.show', $job) }}" class="text-xs font-semibold text-blue-600 hover:underline">
+                                            Lihat
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @if($company->jobs->count() > 5)
+                            <div class="mt-4 pt-3 border-t border-slate-100 text-center">
+                                <button type="button" onclick="switchCompanyTab('jobs')" class="text-xs font-semibold text-blue-600 hover:underline">
+                                    Lihat Semua ({{ $company->jobs->count() }}) Lowongan →
+                                </button>
+                            </div>
+                        @endif
+                    @endif
                 </div>
             </div>
 
@@ -268,25 +308,86 @@
                             <h2 class="text-xl font-bold text-slate-900">Daftar Lowongan Pekerjaan</h2>
                             <p class="text-sm text-slate-500">Kelola dan lihat lowongan kerja yang dibuka oleh {{ $company->name }}</p>
                         </div>
-                    </div>
-
-                    <div class="py-12 text-center">
-                        <div class="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 mx-auto flex items-center justify-center mb-4">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-900 mb-1">Tidak Ada Lowongan Aktif</h3>
-                        <p class="text-sm text-slate-500 max-w-md mx-auto mb-6">
-                            Anda belum menerbitkan lowongan pekerjaan. Anda dapat membuat lowongan baru melalui menu manajemen rekrutmen.
-                        </p>
-                        <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <a href="{{ route('job-postings.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                             </svg>
-                            <span>Buka Lowongan Baru</span>
+                            <span>Tambah Lowongan</span>
                         </a>
                     </div>
+
+                    @if($company->jobs->isEmpty())
+                        <div class="py-12 text-center">
+                            <div class="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 mx-auto flex items-center justify-center mb-4">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-900 mb-1">Tidak Ada Lowongan</h3>
+                            <p class="text-sm text-slate-500 max-w-md mx-auto mb-6">
+                                Anda belum menerbitkan lowongan pekerjaan. Anda dapat membuat lowongan baru melalui tombol di atas atau dashboard.
+                            </p>
+                            <a href="{{ route('job-postings.create') }}" class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Buka Lowongan Baru</span>
+                            </a>
+                        </div>
+                    @else
+                        <div class="divide-y divide-slate-100">
+                            @foreach($company->jobs as $job)
+                                <div class="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <div>
+                                        <a href="{{ route('job-postings.show', $job) }}" class="text-base font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                                            {{ $job->title }}
+                                        </a>
+                                        <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-500">
+                                            <span class="inline-flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                </svg>
+                                                {{ $job->location }}
+                                            </span>
+                                            <span>•</span>
+                                            <span class="inline-flex items-center gap-1">
+                                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                                </svg>
+                                                {{ $job->employment_type }}
+                                            </span>
+                                            @if($job->salary_min || $job->salary_max)
+                                                <span>•</span>
+                                                <span>
+                                                    @if($job->salary_min && $job->salary_max)
+                                                        Rp {{ number_format($job->salary_min, 0, ',', '.') }} - {{ number_format($job->salary_max, 0, ',', '.') }}
+                                                    @elseif($job->salary_min)
+                                                        Rp {{ number_format($job->salary_min, 0, ',', '.') }}+
+                                                    @else
+                                                        Hingga Rp {{ number_format($job->salary_max, 0, ',', '.') }}
+                                                    @endif
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 self-start sm:self-center">
+                                        @if($job->status === 'active')
+                                            <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-green-50 text-green-700">Aktif</span>
+                                        @elseif($job->status === 'pending')
+                                            <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-amber-50 text-amber-700">Menunggu</span>
+                                        @elseif($job->status === 'closed')
+                                            <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-slate-100 text-slate-600">Ditutup</span>
+                                        @else
+                                            <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-full bg-red-50 text-red-700">{{ ucfirst($job->status) }}</span>
+                                        @endif
+                                        <a href="{{ route('job-postings.show', $job) }}" class="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+                                            Detail
+                                        </a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
 

@@ -38,8 +38,8 @@
                         {{-- Left: Job Info --}}
                         <div class="flex items-start gap-4 min-w-0">
                             <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden font-bold text-slate-400 text-lg">
-                                @if($application->jobPosting->company && $application->jobPosting->company->logo)
-                                    <img src="{{ asset('storage/' . $application->jobPosting->company->logo) }}" alt="{{ $application->jobPosting->company->name }}" class="w-full h-full object-cover">
+                                @if($application->jobPosting->company && $application->jobPosting->company->logo_url)
+                                    <img src="{{ $application->jobPosting->company->logo_url }}" alt="{{ $application->jobPosting->company->name }}" class="w-full h-full object-cover">
                                 @else
                                     {{ substr($application->jobPosting->company->name ?? '?', 0, 1) }}
                                 @endif

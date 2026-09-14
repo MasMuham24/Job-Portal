@@ -28,7 +28,7 @@
         </div>
     @else
         {{-- Statistics Cards --}}
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
 
             {{-- Total Lowongan --}}
             <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
@@ -81,6 +81,32 @@
                 </div>
                 <p class="text-2xl font-extrabold text-slate-900">{{ $closedJobs }}</p>
             </div>
+
+            {{-- Total Lamaran --}}
+            <a href="{{ route('employer.applications.index') }}" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-indigo-200 hover:shadow-sm transition-all group block">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 group-hover:bg-indigo-100 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-slate-500">Total Lamaran</span>
+                </div>
+                <p class="text-2xl font-extrabold text-slate-900">{{ $totalApplications }}</p>
+            </a>
+
+            {{-- Lamaran Menunggu Review --}}
+            <a href="{{ route('employer.applications.index', ['status' => 'pending']) }}" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:border-violet-200 hover:shadow-sm transition-all group block">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-violet-50 group-hover:bg-violet-100 flex items-center justify-center transition-colors">
+                        <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-medium text-slate-500">Menunggu Review</span>
+                </div>
+                <p class="text-2xl font-extrabold text-slate-900">{{ $pendingApplications }}</p>
+            </a>
         </div>
 
         {{-- Recent Job Postings --}}

@@ -85,8 +85,8 @@
                 <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 hover:shadow-md transition-shadow group job-card" data-job-id="{{ $job->id }}" data-status="{{ $job->status }}">
                     <div class="flex flex-col sm:flex-row sm:items-start gap-4">
                         <div class="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
-                            @if($job->company && $job->company->logo)
-                                <img src="{{ asset('storage/' . $job->company->logo) }}" alt="{{ $job->company->name }}" class="w-full h-full object-cover">
+                            @if($job->company && $job->company->logo_url)
+                                <img src="{{ $job->company->logo_url }}" alt="{{ $job->company->name }}" class="w-full h-full object-cover">
                             @else
                                 <span class="text-xl font-bold text-slate-400">{{ substr($job->company->name ?? '?', 0, 1) }}</span>
                             @endif

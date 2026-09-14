@@ -23,8 +23,8 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden font-bold text-slate-400 text-2xl">
-                        @if($application->jobPosting->company && $application->jobPosting->company->logo)
-                            <img src="{{ asset('storage/' . $application->jobPosting->company->logo) }}" alt="{{ $application->jobPosting->company->name }}" class="w-full h-full object-cover">
+                        @if($application->jobPosting->company && $application->jobPosting->company->logo_url)
+                            <img src="{{ $application->jobPosting->company->logo_url }}" alt="{{ $application->jobPosting->company->name }}" class="w-full h-full object-cover">
                         @else
                             {{ substr($application->jobPosting->company->name ?? '?', 0, 1) }}
                         @endif

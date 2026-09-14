@@ -259,14 +259,14 @@
 
             <div class="form-group">
                 <label for="email">Alamat Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    value="{{ old('email') }}" 
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="{{ old('email') }}"
                     class="@error('email') input-error @enderror"
-                    placeholder="nama@email.com" 
-                    required 
+                    placeholder="nama@email.com"
+                    required
                     autofocus
                 >
                 @error('email')
@@ -276,12 +276,12 @@
 
             <div class="form-group">
                 <label for="password">Kata Sandi</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
                     class="@error('password') input-error @enderror"
-                    placeholder="Masukkan kata sandi" 
+                    placeholder="Masukkan kata sandi"
                     required
                 >
                 @error('password')

@@ -17,9 +17,7 @@ use App\Http\Controllers\PublicJobController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PublicJobController::class, 'index'])->name('home');
 
 Route::get('/jobs', [PublicJobController::class, 'index'])->name('jobs.index');
 Route::get('/jobs/{jobPosting}', [PublicJobController::class, 'show'])->name('jobs.show');

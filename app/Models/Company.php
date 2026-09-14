@@ -21,6 +21,10 @@ class Company extends Model
         'phone',
     ];
 
+    protected $appends = [
+        'logo_url',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -29,5 +33,18 @@ class Company extends Model
     public function jobs(): HasMany
     {
         return $this->hasMany(JobPosting::class);
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (! $this->logo || trim($this->logo) === '') {
+            return null;
+        }
+
+        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+            return $this->logo;
+        }
+
+        return asset('storage/' . $this->logo);
     }
 }

@@ -31,10 +31,10 @@
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Edit company profile
+                Edit Profil Perusahaan
             </h1>
             <p class="mt-2 text-sm sm:text-base text-slate-600">
-                Keep your company information up to date.
+                Perbarui informasi perusahaan Anda.
             </p>
         </div>
         <a href="{{ route('company.show') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 px-3.5 py-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs self-start">
@@ -245,7 +245,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
-                    <span>Save Changes</span>
+                    <span>Simpan Perubahan</span>
                 </button>
             </div>
         </form>
