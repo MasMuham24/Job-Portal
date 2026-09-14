@@ -13,11 +13,28 @@ class JobApplicationTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function createJobSeeker(): User
+    private function createJobSeeker(bool $completeProfile = true): User
     {
-        return User::factory()->create([
+        $attributes = [
             'role' => 'job_seeker',
-        ]);
+        ];
+
+        if ($completeProfile) {
+            $attributes = array_merge($attributes, [
+                'phone' => '08123456789',
+                'gender' => 'Laki-laki',
+                'birth_date' => '1998-05-15',
+                'address' => 'Jl. Sudirman No. 10',
+                'city' => 'Jakarta Selatan',
+                'education' => 'Sarjana (S1)',
+                'school' => 'Universitas Indonesia',
+                'skills' => 'PHP, Laravel, MySQL',
+                'experience' => '3 tahun web development',
+                'bio' => 'Software engineer yang antusias.',
+            ]);
+        }
+
+        return User::factory()->create($attributes);
     }
 
     private function createEmployerWithJob(string $jobStatus = 'active'): array

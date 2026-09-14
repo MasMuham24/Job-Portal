@@ -85,6 +85,79 @@
                 </div>
             </div>
 
+            {{-- Candidate Profile Details --}}
+            <div class="py-6 border-b border-slate-100">
+                <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                    <span>Profil Lengkap Kandidat</span>
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-5">
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Nomor Telepon / WhatsApp</span>
+                        <span class="font-semibold text-slate-800">{{ $application->user->phone ?? '-' }}</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Jenis Kelamin</span>
+                        <span class="font-semibold text-slate-800">{{ $application->user->gender ?? '-' }}</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Tanggal Lahir</span>
+                        <span class="font-semibold text-slate-800">
+                            {{ $application->user->birth_date ? $application->user->birth_date->translatedFormat('d M Y') : '-' }}
+                        </span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Kota Domisili</span>
+                        <span class="font-semibold text-slate-800">{{ $application->user->city ?? '-' }}</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Pendidikan Terakhir</span>
+                        <span class="font-semibold text-slate-800">{{ $application->user->education ?? '-' }}</span>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                        <span class="text-slate-400 text-xs block">Sekolah / Universitas</span>
+                        <span class="font-semibold text-slate-800">{{ $application->user->school ?? '-' }}</span>
+                    </div>
+                </div>
+
+                @if($application->user->address)
+                    <div class="mb-4 text-sm">
+                        <span class="text-slate-400 text-xs block mb-1">Alamat Tempat Tinggal</span>
+                        <p class="text-slate-700">{{ $application->user->address }}</p>
+                    </div>
+                @endif
+
+                @if($application->user->skills)
+                    <div class="mb-4">
+                        <span class="text-slate-400 text-xs block mb-1.5">Keahlian (Skills)</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            @foreach(array_map('trim', explode(',', $application->user->skills)) as $skill)
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700">
+                                    {{ $skill }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                @if($application->user->experience)
+                    <div class="mb-4">
+                        <span class="text-slate-400 text-xs block mb-1">Pengalaman Kerja / Magang</span>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100 text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+                            {{ $application->user->experience }}
+                        </div>
+                    </div>
+                @endif
+
+                @if($application->user->bio)
+                    <div>
+                        <span class="text-slate-400 text-xs block mb-1">Tentang Pelamar (Bio)</span>
+                        <p class="text-sm text-slate-700 leading-relaxed">{{ $application->user->bio }}</p>
+                    </div>
+                @endif
+            </div>
+
             {{-- Cover Letter Section --}}
             <div class="py-6 border-b border-slate-100">
                 <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">

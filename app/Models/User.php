@@ -15,6 +15,20 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const REQUIRED_PROFILE_FIELDS = [
+        'name',
+        'email',
+        'phone',
+        'gender',
+        'birth_date',
+        'address',
+        'city',
+        'education',
+        'school',
+        'skills',
+        'bio',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,6 +39,16 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'phone',
+        'gender',
+        'birth_date',
+        'address',
+        'city',
+        'education',
+        'school',
+        'skills',
+        'experience',
+        'bio',
     ];
 
     /**
@@ -47,6 +71,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
         ];
     }
 
@@ -58,5 +83,29 @@ class User extends Authenticatable
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function isProfileComplete(): bool
+    {
+        foreach (self::REQUIRED_PROFILE_FIELDS as $field) {
+            $value = $this->{$field};
+            if ($value === null || (is_string($value) && trim($value) === '')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function profileCompletionPercentage(): int
+    {
+        $total = count(self::REQUIRED_PROFILE_FIELDS);
+        $filled = 0;
+        foreach (self::REQUIRED_PROFILE_FIELDS as $field) {
+            $value = $this->{$field};
+            if ($value !== null && (!is_string($value) || trim($value) !== '')) {
+                $filled++;
+            }
+        }
+        return (int) round(($filled / $total) * 100);
     }
 }

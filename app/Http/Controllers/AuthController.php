@@ -55,18 +55,33 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
+            'role' => ['nullable', 'string', 'in:job_seeker,employer'],
         ]);
 
-        if (! Auth::attempt($credentials)) {
-            return back()->withErrors(['email' => 'Email atau password salah'])->onlyInput('email');
+        if (! Auth::attempt($request->only('email', 'password'))) {
+            return back()->withErrors(['email' => 'Email atau password salah'])->onlyInput('email', 'role');
+        }
+
+        $user = Auth::user();
+
+        $selectedRole = $request->input('role');
+        if ($selectedRole) {
+            if ($user->role !== $selectedRole) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()
+                    ->withErrors(['role' => 'Role login tidak sesuai dengan akun Anda.'])
+                    ->onlyInput('email', 'role');
+            }
         }
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }

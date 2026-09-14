@@ -136,6 +136,68 @@
             font-size: 0.85rem;
             font-weight: 500;
         }
+        .role-section {
+            margin-bottom: 20px;
+        }
+        .role-section > label {
+            margin-bottom: 10px;
+        }
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .role-card {
+            position: relative;
+            cursor: pointer;
+        }
+        .role-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .role-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.2s;
+            text-align: center;
+            user-select: none;
+        }
+        .role-card-content:hover {
+            border-color: #93c5fd;
+            background: #f8fafc;
+        }
+        .role-card input[type="radio"]:checked + .role-card-content {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+        .role-card-content .role-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .role-card-content .role-name {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #334155;
+        }
+        .role-card input[type="radio"]:checked + .role-card-content .role-name {
+            color: #1d4ed8;
+        }
+        .role-card-content .role-desc {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            line-height: 1.3;
+        }
     </style>
 </head>
 <body>
@@ -162,6 +224,38 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
+
+            <div class="role-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label style="margin-bottom:0;">Pilih Peran Masuk</label>
+                    <button type="button" id="clear-role" style="background:none;border:none;color:#64748b;font-size:0.75rem;cursor:pointer;display:none;text-decoration:underline;">Batalkan pilihan</button>
+                </div>
+                <div class="role-options">
+                    <label class="role-card">
+                        <input type="radio" name="role" value="job_seeker" id="role-job-seeker" {{ old('role') === 'job_seeker' ? 'checked' : '' }}>
+                        <div class="role-card-content">
+                            <div class="role-icon" style="background:#eff6ff;color:#2563eb;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                            </div>
+                            <span class="role-name">Pencari Kerja</span>
+                            <span class="role-desc">Cari & lamar lowongan</span>
+                        </div>
+                    </label>
+                    <label class="role-card">
+                        <input type="radio" name="role" value="employer" id="role-employer" {{ old('role') === 'employer' ? 'checked' : '' }}>
+                        <div class="role-card-content">
+                            <div class="role-icon" style="background:#ecfdf5;color:#059669;">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                            </div>
+                            <span class="role-name">Rekruter</span>
+                            <span class="role-desc">Pasang lowongan kerja</span>
+                        </div>
+                    </label>
+                </div>
+                @error('role')
+                    <div class="error-message" style="margin-top:8px;">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="form-group">
                 <label for="email">Alamat Email</label>
@@ -204,6 +298,45 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var radios = document.querySelectorAll('input[name="role"]');
+            var clearBtn = document.getElementById('clear-role');
+
+            function updateClearBtn() {
+                var anyChecked = Array.from(radios).some(function(r) { return r.checked; });
+                if (clearBtn) {
+                    clearBtn.style.display = anyChecked ? 'inline' : 'none';
+                }
+            }
+
+            radios.forEach(function(radio) {
+                radio.addEventListener('change', updateClearBtn);
+                radio.addEventListener('click', function() {
+                    if (this.dataset.wasChecked === 'true') {
+                        this.checked = false;
+                        this.dataset.wasChecked = 'false';
+                        updateClearBtn();
+                    } else {
+                        radios.forEach(function(r) { r.dataset.wasChecked = 'false'; });
+                        this.dataset.wasChecked = 'true';
+                    }
+                });
+                if (radio.checked) {
+                    radio.dataset.wasChecked = 'true';
+                }
+            });
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    radios.forEach(function(r) {
+                        r.checked = false;
+                        r.dataset.wasChecked = 'false';
+                    });
+                    updateClearBtn();
+                });
+            }
+
+            updateClearBtn();
+
             var el = document.getElementById('login-success-alert');
             if (el && el.textContent.trim()) {
                 Swal.fire({

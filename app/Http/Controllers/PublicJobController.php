@@ -56,11 +56,13 @@ class PublicJobController extends Controller
 
         $hasApplied = false;
         $userApplication = null;
+        $isProfileComplete = false;
         if (Auth::check() && Auth::user()->role === 'job_seeker') {
             $userApplication = Auth::user()->applications()->where('job_posting_id', $jobPosting->id)->first();
             $hasApplied = $userApplication !== null;
+            $isProfileComplete = Auth::user()->isProfileComplete();
         }
 
-        return view('jobs.show', compact('jobPosting', 'hasApplied', 'userApplication'));
+        return view('jobs.show', compact('jobPosting', 'hasApplied', 'userApplication', 'isProfileComplete'));
     }
 }

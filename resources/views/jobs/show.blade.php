@@ -89,6 +89,20 @@
                                         </a>
                                     @endif
                                 </div>
+                            @elseif(!$isProfileComplete)
+                                <div class="flex flex-col items-center sm:items-end gap-2">
+                                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-left max-w-xs">
+                                        <p class="text-xs font-bold text-amber-800 flex items-center gap-1 mb-1">
+                                            <span>⚠️</span>
+                                            <span>Profil Belum Lengkap</span>
+                                        </p>
+                                        <p class="text-[11px] text-amber-700 leading-snug">Lengkapi profil terlebih dahulu untuk dapat melamar lowongan ini.</p>
+                                    </div>
+                                    <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded-xl transition-all shadow-xs">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                                        <span>Lengkapi Profil</span>
+                                    </a>
+                                </div>
                             @else
                                 <button type="button" onclick="openApplyModal()" id="btn-apply" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-98 rounded-xl transition-all shadow-sm shadow-blue-500/25 cursor-pointer">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -212,6 +226,7 @@
         </div>
     @endif
 </div>
+@endsection
 
 @push('scripts')
 <script>

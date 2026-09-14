@@ -95,6 +95,9 @@
                             <a href="{{ route('applications.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('applications.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                 Lamaran Saya
                             </a>
+                            <a href="{{ route('profile.edit') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('profile.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Profil Saya
+                            </a>
                         @endif
 
                         @if(Auth::check() && Auth::user()->role === 'employer')
@@ -187,6 +190,9 @@
                 </a>
                 <a href="{{ route('applications.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('applications.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                     Lamaran Saya
+                </a>
+                <a href="{{ route('profile.edit') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('profile.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Profil Saya
                 </a>
             @endif
             @if(Auth::check() && Auth::user()->role === 'employer')

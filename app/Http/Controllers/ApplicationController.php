@@ -55,6 +55,10 @@ class ApplicationController extends Controller
             return back()->with('error', 'Anda sudah melamar lowongan ini.');
         }
 
+        if (! Auth::user()->isProfileComplete()) {
+            return redirect()->route('profile.edit')->with('error', 'Lengkapi profil Anda terlebih dahulu sebelum melamar pekerjaan.');
+        }
+
         $validated = $request->validate([
             'cover_letter' => ['nullable', 'string', 'max:2000'],
         ]);

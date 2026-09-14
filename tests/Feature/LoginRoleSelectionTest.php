@@ -176,24 +176,25 @@ class LoginRoleSelectionTest extends TestCase
         $response->assertSessionHasErrors('role');
     }
 
-    public function test_login_does_not_require_role_selection(): void
+    public function test_login_page_displays_pencari_kerja_option(): void
     {
-        User::factory()->create([
-            'email' => 'user@example.com',
-            'password' => 'password123',
-            'role' => 'job_seeker',
-        ]);
+        $response = $this->get('/login');
 
-        $response = $this->post('/login', [
-            'email' => 'user@example.com',
-            'password' => 'password123',
-        ]);
-
-        $this->assertAuthenticated();
-        $response->assertRedirect('/dashboard');
+        $response->assertStatus(200);
+        $response->assertSee('Pencari Kerja');
+        $response->assertSee('job_seeker');
     }
 
-    public function test_job_seeker_can_login_normally(): void
+    public function test_login_page_displays_rekruter_option(): void
+    {
+        $response = $this->get('/login');
+
+        $response->assertStatus(200);
+        $response->assertSee('Rekruter');
+        $response->assertSee('employer');
+    }
+
+    public function test_job_seeker_can_login_with_job_seeker_selection(): void
     {
         $user = User::factory()->create([
             'email' => 'seeker@example.com',
@@ -204,13 +205,14 @@ class LoginRoleSelectionTest extends TestCase
         $response = $this->post('/login', [
             'email' => 'seeker@example.com',
             'password' => 'password123',
+            'role' => 'job_seeker',
         ]);
 
         $this->assertAuthenticatedAs($user);
         $response->assertRedirect('/dashboard');
     }
 
-    public function test_employer_can_login_normally(): void
+    public function test_employer_can_login_with_employer_selection(): void
     {
         $user = User::factory()->create([
             'email' => 'employer@example.com',
@@ -221,13 +223,69 @@ class LoginRoleSelectionTest extends TestCase
         $response = $this->post('/login', [
             'email' => 'employer@example.com',
             'password' => 'password123',
+            'role' => 'employer',
         ]);
 
         $this->assertAuthenticatedAs($user);
         $response->assertRedirect(route('employer.dashboard'));
     }
 
-    public function test_admin_can_login_normally(): void
+    public function test_job_seeker_cannot_login_using_employer_selection(): void
+    {
+        User::factory()->create([
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['role' => 'Role login tidak sesuai dengan akun Anda.']);
+    }
+
+    public function test_employer_cannot_login_using_job_seeker_selection(): void
+    {
+        User::factory()->create([
+            'email' => 'employer@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'employer@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['role' => 'Role login tidak sesuai dengan akun Anda.']);
+    }
+
+    public function test_wrong_role_does_not_leave_the_user_authenticated(): void
+    {
+        User::factory()->create([
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+
+        $this->assertGuest();
+        $this->assertNull(auth()->user());
+        $response->assertSessionHasErrors('role');
+    }
+
+    public function test_admin_login_continues_to_work(): void
     {
         $user = User::factory()->create([
             'email' => 'admin@example.com',
@@ -242,6 +300,84 @@ class LoginRoleSelectionTest extends TestCase
 
         $this->assertAuthenticatedAs($user);
         $response->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_admin_cannot_authenticate_using_employer_selection(): void
+    {
+        User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => 'password123',
+            'role' => 'admin',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'admin@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['role' => 'Role login tidak sesuai dengan akun Anda.']);
+    }
+
+    public function test_invalid_credentials_remain_rejected(): void
+    {
+        User::factory()->create([
+            'email' => 'user@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'user@example.com',
+            'password' => 'wrongpassword',
+            'role' => 'job_seeker',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors(['email']);
+    }
+
+    public function test_successful_login_redirects_correctly(): void
+    {
+        $admin = User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => 'password123',
+            'role' => 'admin',
+        ]);
+        $responseAdmin = $this->post('/login', [
+            'email' => 'admin@example.com',
+            'password' => 'password123',
+        ]);
+        $responseAdmin->assertRedirect(route('admin.dashboard'));
+
+        $this->post('/logout');
+
+        $employer = User::factory()->create([
+            'email' => 'employer@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+        $responseEmployer = $this->post('/login', [
+            'email' => 'employer@example.com',
+            'password' => 'password123',
+            'role' => 'employer',
+        ]);
+        $responseEmployer->assertRedirect(route('employer.dashboard'));
+
+        $this->post('/logout');
+
+        $seeker = User::factory()->create([
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+        $responseSeeker = $this->post('/login', [
+            'email' => 'seeker@example.com',
+            'password' => 'password123',
+            'role' => 'job_seeker',
+        ]);
+        $responseSeeker->assertRedirect('/dashboard');
     }
 
     public function test_registration_form_shows_company_fields_for_employer(): void
