@@ -152,6 +152,19 @@
                 </div>
             @endif
 
+            @if(Auth::user()->role === 'job_seeker')
+                <div style="margin: 24px 0; padding: 20px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e40af; margin-bottom: 6px;">Lamaran Pekerjaan</h3>
+                    <p style="font-size: 0.9rem; color: #1e3a8a; margin-bottom: 16px;">
+                        Pantau status lamaran kerja Anda atau cari lowongan baru yang sesuai keahlian Anda.
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="{{ route('applications.index') }}" style="display: inline-block; padding: 8px 16px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.88rem;">Lihat Lamaran Saya</a>
+                        <a href="{{ route('jobs.index') }}" style="display: inline-block; padding: 8px 16px; background: #ffffff; color: #2563eb; border: 1px solid #2563eb; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 0.88rem;">Cari Lowongan Kerja</a>
+                    </div>
+                </div>
+            @endif
+
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn-logout">Logout</button>

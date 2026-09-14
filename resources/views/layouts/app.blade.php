@@ -80,8 +80,20 @@
                         </a>
 
                         @if(Auth::check() && Auth::user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                            <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                 Admin Panel
+                            </a>
+                            <a href="{{ route('admin.users.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Kelola Pengguna
+                            </a>
+                        @endif
+
+                        @if(Auth::check() && Auth::user()->role === 'job_seeker')
+                            <a href="{{ route('jobs.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('jobs.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Cari Lowongan
+                            </a>
+                            <a href="{{ route('applications.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('applications.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                Lamaran Saya
                             </a>
                         @endif
 
@@ -93,6 +105,9 @@
                                 <a href="{{ route('job-postings.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('job-postings.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
                                     Kelola Lowongan
                                 </a>
+                                <a href="{{ route('employer.applications.index') }}" class="px-3.5 py-2 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('employer.applications.*') ? 'text-blue-600 bg-blue-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70' }}">
+                                    Lamaran Masuk
+                                </a>
                             @else
                                 <a href="{{ route('company.create') }}" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs flex items-center gap-1.5">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
@@ -100,10 +115,6 @@
                                 </a>
                             @endif
                         @endif
-
-                        <a href="#jobs" class="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100/70 rounded-lg transition-colors">
-                            Lowongan Kerja
-                        </a>
                     </div>
                 </div>
 
@@ -163,8 +174,19 @@
                 Dashboard
             </a>
             @if(Auth::check() && Auth::user()->role === 'admin')
-                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                     Admin Panel
+                </a>
+                <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('admin.users.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Kelola Pengguna
+                </a>
+            @endif
+            @if(Auth::check() && Auth::user()->role === 'job_seeker')
+                <a href="{{ route('jobs.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('jobs.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Cari Lowongan
+                </a>
+                <a href="{{ route('applications.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('applications.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                    Lamaran Saya
                 </a>
             @endif
             @if(Auth::check() && Auth::user()->role === 'employer')
@@ -175,15 +197,15 @@
                     <a href="{{ route('job-postings.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('job-postings.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
                         Kelola Lowongan
                     </a>
+                    <a href="{{ route('employer.applications.index') }}" class="block px-3 py-2 text-base font-medium rounded-lg {{ request()->routeIs('employer.applications.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-700 hover:bg-slate-100' }}">
+                        Lamaran Masuk
+                    </a>
                 @else
                     <a href="{{ route('company.create') }}" class="block px-3 py-2 text-base font-semibold text-blue-600 hover:bg-blue-50 rounded-lg">
                         + Buat Profil Perusahaan
                     </a>
                 @endif
             @endif
-            <a href="#jobs" class="block px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-100 rounded-lg">
-                Lowongan Kerja
-            </a>
 
             @auth
                 <div class="pt-3 mt-3 border-t border-slate-200">

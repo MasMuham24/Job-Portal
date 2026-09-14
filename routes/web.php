@@ -2,15 +2,35 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\JobPostingController as AdminJobPostingController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationStatusController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Employer\ApplicationController as EmployerApplicationController;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboardController;
 use App\Http\Controllers\JobPostingController;
+use App\Http\Controllers\JobStatusController;
+use App\Http\Controllers\PublicJobController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/jobs', [PublicJobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/{jobPosting}', [PublicJobController::class, 'show'])->name('jobs.show');
+
+// Lightweight polling endpoints for real-time status updates
+Route::prefix('api')->name('api.')->group(function () {
+    Route::get('/job-postings/statuses', [JobStatusController::class, 'index'])->name('job-postings.statuses');
+    Route::get('/job-postings/{jobPosting}/status', [JobStatusController::class, 'show'])->name('job-postings.status');
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/applications/{application}/status', [ApplicationStatusController::class, 'show'])->name('applications.status');
+        Route::get('/my-applications/statuses', [ApplicationStatusController::class, 'myStatuses'])->name('applications.my-statuses');
+    });
 });
 
 Route::middleware('guest')->group(function () {
@@ -34,8 +54,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
+Route::middleware(['auth', 'role:job_seeker'])->group(function () {
+    Route::post('/jobs/{jobPosting}/apply', [ApplicationController::class, 'store'])->name('jobs.apply');
+    Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+});
+
 Route::middleware(['auth', 'role:employer'])->prefix('employer')->name('employer.')->group(function () {
     Route::get('/dashboard', [EmployerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/applications', [EmployerApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/applications/{application}', [EmployerApplicationController::class, 'show'])->name('applications.show');
+    Route::put('/applications/{application}/status', [EmployerApplicationController::class, 'updateStatus'])->name('applications.status');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -44,6 +73,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/job-postings/{jobPosting}', [AdminJobPostingController::class, 'show'])->name('job-postings.show');
     Route::put('/job-postings/{jobPosting}/status', [AdminJobPostingController::class, 'updateStatus'])->name('job-postings.status');
     Route::delete('/job-postings/{jobPosting}', [AdminJobPostingController::class, 'destroy'])->name('job-postings.destroy');
+
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
+    Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware(['auth', 'role:employer,admin'])->prefix('company')->name('company.')->group(function () {

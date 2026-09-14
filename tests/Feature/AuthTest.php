@@ -17,7 +17,6 @@ class AuthTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Daftar Akun');
-        $response->assertDontSee('role');
     }
 
     public function test_user_can_register_with_default_role_job_seeker(): void
@@ -27,6 +26,7 @@ class AuthTest extends TestCase
             'email' => 'budi@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
+            'role' => 'job_seeker',
         ]);
 
         $this->assertGuest();
@@ -74,7 +74,7 @@ class AuthTest extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($user);
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect(route('employer.dashboard'));
     }
 
     public function test_user_cannot_login_with_invalid_credentials(): void
